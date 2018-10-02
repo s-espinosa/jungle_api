@@ -24,5 +24,6 @@ defmodule JungleApiWeb.Router do
 
     get "/messages", MessageController, :index
     get "/messages/last", MessageController, :show
+    post "/messages", MessageController, :create
   end
 end
