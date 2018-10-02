@@ -1,4 +1,3 @@
-require IEx
 alias JungleApi.Repo
 alias JungleApi.Message
 alias Ecto.Query
@@ -15,6 +14,13 @@ defmodule JungleApiWeb.MessageController do
     message = Message
       |> Query.last
       |> Repo.one
+    render conn, "show.json", message: message
+  end
+
+  def create(conn, %{"message" => message_params}) do
+    {_, message} = %Message{}
+    |> Message.changeset(message_params)
+    |> Repo.insert()
     render conn, "show.json", message: message
   end
 end
