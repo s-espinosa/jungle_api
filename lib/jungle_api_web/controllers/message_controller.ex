@@ -6,21 +6,34 @@ defmodule JungleApiWeb.MessageController do
   use JungleApiWeb, :controller
 
   def index(conn, _params) do
-    messages = Repo.all(Message)
-    render conn, "index.json", messages: messages
+    Message
+      |> Repo.all
+      |> render_index(conn)
   end
 
   def show(conn, _params) do
-    message = Message
+    Message
       |> Query.last
       |> Repo.one
-    render conn, "show.json", message: message
+      |> render_show(conn)
   end
 
   def create(conn, %{"message" => message_params}) do
-    {_, message} = %Message{}
-    |> Message.changeset(message_params)
-    |> Repo.insert()
+    %Message{}
+      |> Message.changeset(message_params)
+      |> Repo.insert()
+      |> render_created(conn)
+  end
+
+  defp render_created({:ok, message}, conn) do
     render conn, "show.json", message: message
+  end
+
+  defp render_show(message, conn) do
+    render conn, "show.json", message: message
+  end
+
+  defp render_index(messages, conn) do
+    render conn, "index.json", messages: messages
   end
 end
